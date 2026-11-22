@@ -1,10 +1,9 @@
---[[ MrCookieHub · By zinx ]]
-print("[MrCookieHub] Loaded")
+--[[ MrCookieHub Red · UI-only edition ]]
+print("[MrCookieHub Red] Loaded (UI-only)")
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local RS = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 local LP = Players.LocalPlayer
@@ -168,7 +167,7 @@ local powerLbl = Instance.new("TextLabel")
 powerLbl.BackgroundTransparency = 1
 powerLbl.Position = UDim2.fromOffset(14, 56)
 powerLbl.Size = UDim2.new(1, -28, 0, 14)
-powerLbl.Text = "PACKET POWER"
+powerLbl.Text = "POWER SETTING (VISUAL)"
 powerLbl.Font = Enum.Font.GothamBold
 powerLbl.TextSize = 10
 powerLbl.TextColor3 = DIM
@@ -445,7 +444,6 @@ local intensity = 15000
 local toggleKey = Enum.KeyCode.V
 local toggleKeyName = "V"
 local listeningForKey = false
-local Event
 local isCollapsed = false
 
 local function setElementsVisible(visible)
@@ -473,8 +471,7 @@ local function applyKeybind(name)
 	KeyBtn.Text = toggleKeyName
 end
 
-local function resolveEvent()
-	local ok, net = pcall(function()
+local function 	local ok, net = pcall(function()
 		local packages = RS:FindFirstChild("Packages")
 		if not packages then return nil end
 		return packages:FindFirstChild("Net")
@@ -484,7 +481,6 @@ local function resolveEvent()
 		Event = children[230] or (children[1] and children[1]:IsA("RemoteEvent") and children[1])
 	end
 end
-resolveEvent()
 
 local function paintActivate()
 	if lagging then
@@ -501,24 +497,11 @@ local function startLagging()
 	updatePower()
 	lagging = true
 	paintActivate()
-	if not Event then resolveEvent() end
-	
-	local payload = table.create(intensity, function() end) 
-	
-	lagThread = task.spawn(function()
-		while lagging do
-			if Event then 
-				pcall(function() Event:FireServer(payload) end) 
-			end
-			task.wait(0.05) 
-		end
-	end)
 end
 
 local function stopLagging()
 	if not lagging then return end
 	lagging = false
-	if lagThread then pcall(task.cancel, lagThread); lagThread = nil end
 	paintActivate()
 end
 
